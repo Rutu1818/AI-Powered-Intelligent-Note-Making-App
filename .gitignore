@@ -31,7 +31,7 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+build/
 
 # Symbolication related
 app.*.symbols
@@ -43,3 +43,47 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Large files and executables
+firebase-tools-instant-win.exe
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Large binaries and tools
+firebase-tools*.exe
+*.exe
+*.apk
+*.aab
+*.ipa
+/build/
+*.log
+
+# Media files
+*.mp3
+*.mp4
+*.wav
+*.png
+!assets/images/*.png  # Allow specific image assets
+
+# Archives
+*.zip
+*.rar
+*.7z
+*.tar.gz
+
+# Firebase and tools
+firebase-tools*
+*firebase*.exe
+*firebase*.zip
+/firebase/
+
+# Credentials and sensitive files
+service_acc.json
+credentials.json
+
+# Credentials
+*.json
+!pubspec.yaml
+!pubspec.json
