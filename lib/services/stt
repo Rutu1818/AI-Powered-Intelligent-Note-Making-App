@@ -1,0 +1,79 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class SpeechToTextService {
+  static const String _apiKey = "YOUR_GOOGLE_CLOUD_API_KEY"; // 🔥 Replace with your API Key
+
+  Future<String> convertToText(String gcsUri) async {
+    final url = Uri.parse("https://speech.googleapis.com/v1/speech:recognize?key=$_apiKey");
+
+    final requestPayload = {
+      "config": {
+        "encoding": "LINEAR16",
+        "sampleRateHertz": 16000,
+        "languageCode": "en-US"
+      },
+      "audio": {
+        "uri": gcsUri // ✅ Pass GCS URL instead of raw file
+      }
+    };
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(requestPayload),
+    );
+
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200 && data.containsKey("results")) {
+      return data["results"][0]["alternatives"][0]["transcript"];
+    } else {
+      return "Error processing audio file";
+    }
+  }
+}
+
+
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class SpeechToTextService {
+  static const String _apiKey = "AIzaSyAz7MH6n-uJtMEHFgxNbZ3PX6H6GAeGRBE"; // 🔥 Replace with your API Key
+  static const String _apiUrl = "https://speech.googleapis.com/v1/speech:recognize";
+
+  /// Converts speech to text from GCS URI
+  Future<String> convertToText(String gcsUri) async {
+    // Ensure the URI is in the correct format
+    if (gcsUri.startsWith("https://storage.googleapis.com/")) {
+      gcsUri = gcsUri.replaceFirst("https://storage.googleapis.com/", "gs://");
+    }
+
+    final url = Uri.parse(
+        "https://speech.googleapis.com/v1/speech:recognize?key=$_apiKey");
+
+    final requestPayload = {
+      "config": {
+        "encoding": "MP3",
+        "sampleRateHertz": 16000,
+        "languageCode": "en-US"
+      },
+      "audio": {
+        "uri": gcsUri.replaceFirst("https://storage.googleapis.com/", "gs://") // ✅ Now using the correct GCS URI
+      }
+    };
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(requestPayload),
+    );
+
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200 && data.containsKey("results")) {
+      return data["results"][0]["alternatives"][0]["transcript"];
+    } else {
+      return "❌ API Error: ${data['error']['message']}";
+    }
+  }
+}

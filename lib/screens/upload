@@ -1,0 +1,130 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import '../services/drive_service.dart';
+import '../services/stt_service.dart';
+
+import 'dart:io';
+
+class UploadLectureScreen extends StatefulWidget {
+  const UploadLectureScreen({super.key});
+
+  @override
+  _UploadLectureScreenState createState() => _UploadLectureScreenState();
+}
+
+class _UploadLectureScreenState extends State<UploadLectureScreen> {
+  final DriveService _driveService = DriveService();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final TextEditingController _titleController = TextEditingController();
+
+  File? _selectedFile; // ✅ Declare _selectedFile
+  bool _isUploading = false;
+
+  /// Picks an audio file using FilePicker
+  Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null && result.files.single.path != null) {
+      setState(() {
+        _selectedFile = File(result.files.single.path!);
+      });
+      _showMessage("✅ File Selected: ${_selectedFile!.path.split('/').last}");
+    } else {
+      _showMessage("🚨 No file selected!");
+    }
+  }
+
+  /// Upload function (already fixed in previous response)
+  Future<void> _uploadLecture() async {
+    if (_titleController.text.isEmpty) {
+      _showMessage("🚨 Please enter a title!");
+      return;
+    }
+    if (_selectedFile == null) {
+      _showMessage("🚨 No file selected!");
+      return;
+    }
+
+    setState(() => _isUploading = true);
+
+    try {
+      // Upload file to Google Drive
+      print("🚀 Uploading to Google Drive...");
+      String? driveLink = await _driveService.uploadToGoogleDrive(_selectedFile!);
+
+      if (!mounted) return; // ✅ Prevent setState() if widget is disposed
+      if (driveLink == null) {
+        _showMessage("❌ Upload to Google Drive failed!");
+        return;
+      }
+      print("✅ Uploaded to Google Drive: $driveLink");
+
+      // Convert audio to text
+      print("🎙 Converting speech to text...");
+      String transcript = await SpeechToTextService().convertToText(_selectedFile!);
+
+      if (!mounted) return; // ✅ Prevent setState() if widget is disposed
+      if (transcript.toLowerCase().contains("error processing audio file")) {
+        _showMessage("⚠️ Error in speech-to-text conversion.");
+        return;
+      }
+      print("✅ Transcript received: $transcript");
+
+      // Save to Firestore
+      print("🔥 Saving to Firestore...");
+      await _firestore.collection('lectures').add({
+        'title': _titleController.text, // ✅ Include title
+        'drive_link': driveLink,
+        'transcript': transcript,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      if (!mounted) return;
+      print("✅ Successfully saved to Firestore!");
+      _showMessage("✅ Upload & Transcription Complete!");
+    } catch (e) {
+      print("❌ Error: ${e.toString()}");
+      if (mounted) _showMessage("❌ Error: ${e.toString()}");
+    } finally {
+      if (mounted) setState(() => _isUploading = false);
+    }
+  }
+
+  /// Shows a Snackbar message
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Upload Lecture")),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(labelText: "Enter Lecture Title"),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _pickFile,
+              child: Text(_selectedFile == null
+                  ? "Select File"
+                  : "Selected: ${_selectedFile!.path.split('/').last}"),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _isUploading ? null : _uploadLecture,
+              child: _isUploading
+                  ? CircularProgressIndicator(color: Colors.white)
+                  : Text("Upload & Transcribe"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

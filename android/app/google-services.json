@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "867342421485",
+    "project_id": "ainotesv1",
+    "storage_bucket": "ainotesv1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:867342421485:android:896ef36e88129b25976be4",
+        "android_client_info": {
+          "package_name": "com.example.practice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "867342421485-3rsf2kiv25nqhdkas65g66bf1pohauev.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz7MH6n-uJtMEHFgxNbZ3PX6H6GAeGRBE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "867342421485-3rsf2kiv25nqhdkas65g66bf1pohauev.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "867342421485-kge8uvtm617oekalvofg1p8cv868g2a0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.practice"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
