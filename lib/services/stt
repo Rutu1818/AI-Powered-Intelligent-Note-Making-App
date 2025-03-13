@@ -39,7 +39,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class SpeechToTextService {
-  static const String _apiKey = "AIzaSyAz7MH6n-uJtMEHFgxNbZ3PX6H6GAeGRBE"; // 🔥 Replace with your API Key
+  static const String _apiKey = "" // 🔥 Replace with your API Key
   static const String _apiUrl = "https://speech.googleapis.com/v1/speech:recognize";
 
   /// Converts speech to text from GCS URI
