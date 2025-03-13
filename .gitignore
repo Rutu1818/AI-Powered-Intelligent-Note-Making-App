@@ -31,7 +31,11 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
+<<<<<<< HEAD
 build/
+=======
+/build/
+>>>>>>> e6bc8161ff7dd266d24985a1923abd7ca2753b08
 
 # Symbolication related
 app.*.symbols
@@ -43,6 +47,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+<<<<<<< HEAD
 
 # Large files and executables
 firebase-tools-instant-win.exe
@@ -87,3 +92,5 @@ credentials.json
 *.json
 !pubspec.yaml
 !pubspec.json
+=======
+>>>>>>> e6bc8161ff7dd266d24985a1923abd7ca2753b08

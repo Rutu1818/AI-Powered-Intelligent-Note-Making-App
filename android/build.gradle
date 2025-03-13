@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 buildscript {
     dependencies {
         classpath 'com.google.gms:google-services:4.4.2' // Latest version
@@ -10,6 +11,8 @@ buildscript {
     }
 }
 
+=======
+>>>>>>> e6bc8161ff7dd266d24985a1923abd7ca2753b08
 allprojects {
     repositories {
         google()
