@@ -65,6 +65,7 @@ class _UploadScreenState extends State<UploadScreen> {
         'transcript': '',
         'transcriptionComplete': false,
         'transcriptionError': null,
+        'transcriptionProgress': '0%',  // Add this line
       });
 
       // Start transcription
@@ -72,6 +73,7 @@ class _UploadScreenState extends State<UploadScreen> {
         SnackBar(content: Text('Starting transcription...')),
       );
 
+      // Change this line to use the proper class name as defined in stt_service.dart
       await STTService.transcribeAudio(docRef.id, fileUrl);
       
       _titleController.clear();
@@ -81,7 +83,7 @@ class _UploadScreenState extends State<UploadScreen> {
       });
       
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lecture uploaded and transcription started!')),
+        SnackBar(content: Text('All Done!')),
       );
 
     } catch (e) {
@@ -96,44 +98,172 @@ class _UploadScreenState extends State<UploadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+      backgroundColor: const Color(0xFFeeedf2),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        children: [
+          const SizedBox(height: 30),
+          // Header
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,  // Changed from spaceBetween
             children: [
-              TextFormField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                  labelText: 'Lecture Title',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) => 
-                  value?.isEmpty ?? true ? 'Please enter a title' : null,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Upload Lecture",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    "Add New Note",
+                    style: TextStyle(
+                      fontSize: 30, 
+                      fontWeight: FontWeight.bold, 
+                      color: Color(0xFF3b3b3b)
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: _isUploading ? null : _pickFile,
-                icon: Icon(Icons.attach_file),
-                label: Text(_fileName ?? 'Select Audio File'),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(16),
-                ),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _isUploading ? null : _uploadLecture,
-                child: _isUploading
-                    ? CircularProgressIndicator(color: Colors.white)
-                    : Text('Upload Lecture'),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(16),
-                ),
-              ),
+              // Removed Container with image
             ],
           ),
-        ),
+          const SizedBox(height: 30),
+
+          // Form
+          Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Title Input
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade200,
+                        blurRadius: 6,
+                        spreadRadius: 2
+                      )
+                    ],
+                  ),
+                  child: TextFormField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                      labelText: 'Lecture Title',
+                      border: OutlineInputBorder(borderSide: BorderSide.none),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    validator: (value) => 
+                      value?.isEmpty ?? true ? 'Please enter a title' : null,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // File Selection
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade200,
+                        blurRadius: 6,
+                        spreadRadius: 2
+                      )
+                    ],
+                  ),
+                  child: ElevatedButton(  // Changed from ElevatedButton.icon
+                    onPressed: _isUploading ? null : _pickFile,
+                    child: Text(  // Changed from label to child
+                      _fileName ?? 'Select Audio File',
+                      style: TextStyle(
+                        color: Colors.indigo.shade700,
+                        fontWeight: FontWeight.w600
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(20),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+
+                // Selected File Name Display
+                if (_fileName != null)
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade200,
+                          blurRadius: 6,
+                          spreadRadius: 2
+                        )
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        //Icon(Icons.audio_file, color: Colors.indigo.shade300),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            _fileName!,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                const SizedBox(height: 30),
+
+                // Upload Button
+                ElevatedButton(
+                  onPressed: _isUploading ? null : _uploadLecture,
+                  child: _isUploading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Upload Lecture',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigo,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
