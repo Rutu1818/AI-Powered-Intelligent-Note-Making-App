@@ -18,7 +18,7 @@ class _UploadLectureScreenState extends State<UploadLectureScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _titleController = TextEditingController();
 
-  File? _selectedFile; // ✅ Declare _selectedFile
+  File? _selectedFile; 
   bool _isUploading = false;
 
   /// Picks an audio file using FilePicker
@@ -53,7 +53,7 @@ class _UploadLectureScreenState extends State<UploadLectureScreen> {
       print("🚀 Uploading to Google Drive...");
       String? driveLink = await _driveService.uploadToGoogleDrive(_selectedFile!);
 
-      if (!mounted) return; // ✅ Prevent setState() if widget is disposed
+      if (!mounted) return; 
       if (driveLink == null) {
         _showMessage("❌ Upload to Google Drive failed!");
         return;
@@ -64,7 +64,7 @@ class _UploadLectureScreenState extends State<UploadLectureScreen> {
       print("🎙 Converting speech to text...");
       String transcript = await SpeechToTextService().convertToText(_selectedFile!);
 
-      if (!mounted) return; // ✅ Prevent setState() if widget is disposed
+      if (!mounted) return; 
       if (transcript.toLowerCase().contains("error processing audio file")) {
         _showMessage("⚠️ Error in speech-to-text conversion.");
         return;
@@ -72,9 +72,9 @@ class _UploadLectureScreenState extends State<UploadLectureScreen> {
       print("✅ Transcript received: $transcript");
 
       // Save to Firestore
-      print("🔥 Saving to Firestore...");
+      print(" Saving to Firestore...");
       await _firestore.collection('lectures').add({
-        'title': _titleController.text, // ✅ Include title
+        'title': _titleController.text, 
         'drive_link': driveLink,
         'transcript': transcript,
         'timestamp': FieldValue.serverTimestamp(),
