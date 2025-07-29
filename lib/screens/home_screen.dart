@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .listen((snapshot) {
       setState(() {
         allLectures = snapshot.docs;
-        filteredLectures = allLectures; // Initially show all
+        filteredLectures = allLectures; 
       });
     });
   }
@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 20),
 
-          // 🔍 Search Bar
+          // Search Bar
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
@@ -120,14 +120,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
           const SizedBox(height: 30),
 
-          // 📌 Recent Notes Title
+          // Recent notes title
           const Text(
             "Recent Notes",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF3b3b3b)),
           ),
           const SizedBox(height: 10),
 
-          // 📄 Lecture List (Fetched from Firestore)
+          // Lecture list (fetched from Firestore)
           if (filteredLectures.isEmpty)
             const Center(child: Padding(padding: EdgeInsets.all(20), child: Text("No lectures found"))),
           ListView.builder(
@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           const SizedBox(height: 30),
 
-          // 📤 Upload Button
+          // Upload Button
           GestureDetector(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => UploadScreen()));
