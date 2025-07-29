@@ -65,15 +65,13 @@ class _UploadScreenState extends State<UploadScreen> {
         'transcript': '',
         'transcriptionComplete': false,
         'transcriptionError': null,
-        'transcriptionProgress': '0%',  // Add this line
+        'transcriptionProgress': '0%',  
       });
 
-      // Start transcription
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Starting transcription...')),
       );
 
-      // Change this line to use the proper class name as defined in stt_service.dart
       await STTService.transcribeAudio(docRef.id, fileUrl);
       
       _titleController.clear();
@@ -105,7 +103,7 @@ class _UploadScreenState extends State<UploadScreen> {
           const SizedBox(height: 30),
           // Header
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,  // Changed from spaceBetween
+            mainAxisAlignment: MainAxisAlignment.start,  
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +123,6 @@ class _UploadScreenState extends State<UploadScreen> {
                   ),
                 ],
               ),
-              // Removed Container with image
             ],
           ),
           const SizedBox(height: 30),
@@ -136,7 +133,6 @@ class _UploadScreenState extends State<UploadScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Title Input
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
@@ -177,9 +173,9 @@ class _UploadScreenState extends State<UploadScreen> {
                       )
                     ],
                   ),
-                  child: ElevatedButton(  // Changed from ElevatedButton.icon
+                  child: ElevatedButton(  
                     onPressed: _isUploading ? null : _pickFile,
-                    child: Text(  // Changed from label to child
+                    child: Text(  
                       _fileName ?? 'Select Audio File',
                       style: TextStyle(
                         color: Colors.indigo.shade700,
@@ -198,7 +194,7 @@ class _UploadScreenState extends State<UploadScreen> {
                 ),
                 const SizedBox(height: 30),
 
-                // Selected File Name Display
+                // Selected file name display
                 if (_fileName != null)
                   Container(
                     padding: const EdgeInsets.all(15),
@@ -215,7 +211,6 @@ class _UploadScreenState extends State<UploadScreen> {
                     ),
                     child: Row(
                       children: [
-                        //Icon(Icons.audio_file, color: Colors.indigo.shade300),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
